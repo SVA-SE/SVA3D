@@ -1,4 +1,4 @@
-run.local=T
+run.local=F
 
 sourcefiles <- ifelse(run.local==T,"I:/ESS/","/media/i/ESS/")
 
