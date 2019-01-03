@@ -13,7 +13,7 @@ source("SVA3D_definitions.r")
 
 #SVASSS
 source(paste0(sourcefiles,"SVASSS2/SVASSS/Definitions.r"))
-load(paste0(shiny.history,"/menu.summaries.RData"))
+load(paste0(sourcefiles,"SVASSS2/history_files/menu.summaries.RData"))
 source(paste0(sourcefiles,"SVASSS2/SVASSS/ui_SVASSS.r"))
 
 #AMR
