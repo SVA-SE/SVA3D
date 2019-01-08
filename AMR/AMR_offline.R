@@ -6,8 +6,8 @@ source("I:/ESS/SVA3D/AMR/AMR_functions.R")
 
 #resANT <- read.table("T:\\resistensrapporter\\Resistensbestämningar_ANT_allt_fcd.txt", header=TRUE, sep="\t", dec=",", encoding="latin1", quote = "\"",comment.char = "",fill=TRUE ) 
 
-resANT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar_ANT_allt_fcd.csv", header=TRUE, encoding="latin1", colClasses = "character")
-resBKT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar_BKT_allt_fcd.csv", header=TRUE, encoding="latin1", colClasses = "character") 
+resANT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar ANT allt_fcd.csv", header=TRUE, encoding="latin1", colClasses = "character")
+resBKT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar BKT allt_fcd.csv", header=TRUE, encoding="latin1", colClasses = "character") 
 
 #str(resANT)
 #str(resBKT)

@@ -10,6 +10,7 @@ library(stringr)
 #library(shinyjs)
 
 source("SVA3D_definitions.r")
+source("SVA3D_functions.r")
 
 #SVASSS
 source(paste0(sourcefiles,"SVASSS2/SVASSS/Definitions.r"))
