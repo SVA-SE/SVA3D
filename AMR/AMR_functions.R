@@ -1,5 +1,6 @@
 fillResultat <- function(data,IDColumn,analysColumn,analysValue,resultColumn){
   
+  if(length(which(data[,analysColumn]==analysValue))>0){
   rows <- which(data[,analysColumn]==analysValue)
   ID.value <- data[rows,c(IDColumn,resultColumn)]
   
@@ -14,7 +15,7 @@ fillResultat <- function(data,IDColumn,analysColumn,analysValue,resultColumn){
       }
   
   data <- data[-rows,]
-  
+  }
   return(data)
   
 }

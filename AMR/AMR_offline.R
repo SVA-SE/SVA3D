@@ -1,4 +1,5 @@
 library(tidyr)
+library(dplyr)
 
 source("I:/ESS/SVA3D/AMR/AMR_functions.R")
 
@@ -6,8 +7,21 @@ source("I:/ESS/SVA3D/AMR/AMR_functions.R")
 
 #resANT <- read.table("T:\\resistensrapporter\\Resistensbestämningar_ANT_allt_fcd.txt", header=TRUE, sep="\t", dec=",", encoding="latin1", quote = "\"",comment.char = "",fill=TRUE ) 
 
-resANT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar ANT allt_fcd.csv", header=TRUE, encoding="latin1", colClasses = "character")
-resBKT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar BKT allt_fcd.csv", header=TRUE, encoding="latin1", colClasses = "character") 
+resANT <- read.csv2("T:\\SVA3D\\AMR\\Resistensbest\u00E4mningar ANT allt_fcd.txt", 
+                    sep = "\t",
+                    header = TRUE,
+                    na.strings = "",
+                    stringsAsFactors = FALSE,
+                    encoding = "UTF-8",
+                    quote = "")
+resBKT <- read.csv2("T:\\SVA3D\\AMR\\Resistensbest\u00E4mningar BKT allt_fcd.txt",
+                    sep = "\t",
+                    header = TRUE,
+                    na.strings = "",
+                    stringsAsFactors = FALSE,
+                    encoding = "UTF-8",
+                    quote = "")
+
 
 #str(resANT)
 #str(resBKT)
@@ -15,12 +29,15 @@ resBKT <- read.csv2("T:\\resistensrapporter\\Resistensbestämningar BKT allt_fcd
 source <- "ANT"
 resANT <- cbind(source,resANT)
 
-source <- "BKT"
-Överordnade.uppdrag <- NA
-ResultatID <- resBKT$ResultatID
-resBKT <- cbind(source,ResultatID,Överordnade.uppdrag,resBKT[,2:22])
 
-res <- rbind(resANT,resBKT)
+source <- "BKT"
+#Överordnade.uppdrag <- NA
+#ResultatID <- resBKT$ResultatID
+#resBKT <- cbind(source,ResultatID,Överordnade.uppdrag,resBKT[,2:22])
+resBKT <- cbind(source,resBKT)
+
+res <- bind_rows(resANT,resBKT)
+#res <- rbind(resANT,resBKT)
 
 #res$Analys <- as.character(res$Analys)
 res$Analys <- gsub("\\s*\\([^\\)]+\\)","",res$Analys)
@@ -50,9 +67,11 @@ res$Analys[which(res$Analys=="trimetoprim/sulfamethoxazol")]<- "trimetoprim/sulf
 res$Analys[which(res$Analys=="fusidinsyra")]<- "fusidin"
 
 #unique(sort(as.character(res$Analys)))
+if (length(which(res$Analys==""))>0){
+  res <- res[-which(res$Analys==""),]}
+if (length(which(res$Antibiotikaresultat==""))>0){
+  res$Antibiotikaresultat[which(res$Antibiotikaresultat=="")]<-NA}
 
-res <- res[-which(res$Analys==""),]
-res$Antibiotikaresultat[which(res$Antibiotikaresultat=="")]<-NA
 res$Antibiotikaresultat <- gsub("\\?","<=",res$Antibiotikaresultat)
 
 res <- fillResultat(data=res,IDColumn="ResultatID",analysColumn="Analys",
@@ -85,11 +104,12 @@ res <- fillResultat(data=res,IDColumn="ResultatID",analysColumn="Analys",
 res <- fillResultat(data=res,IDColumn="ResultatID",analysColumn="Analys",
                     analysValue="tmsz från biomic",resultColumn="Antibiotikaresultat")
 
-res <- res[-(which(duplicated(res))),]
+if(length(which(duplicated(res)))>0){
+  res <- res[-(which(duplicated(res))),]}
 
 res <- spread(data=res,Analys,Antibiotikaresultat)
 
-year <- as.numeric(paste0("20",substr(res$InsäntmaterialID,1,2)))
+year <- as.numeric(paste0("20",substr(res[,"Ins\u00E4ntmaterialID"],1,2)))
 res <- cbind(res,year)
 
 
