@@ -2,7 +2,7 @@ library(tidyr)
 library(dplyr)
 
 
-sink("I:/ESS/SVA3D/AMR/AMR_offline_log.R")
+sink("I:/ESS/SVA3D/AMR/AMR_offline_log.txt")
 source("I:/ESS/SVA3D/AMR/AMR_functions.R")
 
 #resANT <- read.table("T:\\resistensrapporter\\Resistensbestämningar_ANT_allt_fcd.txt", header=TRUE, sep="\t", dec=",", encoding="latin1", quote = "\"",comment.char = "",fill=TRUE ) 
@@ -111,8 +111,6 @@ res <- spread(data=res,Analys,Antibiotikaresultat)
 
 year <- as.numeric(paste0("20",substr(res[,"Ins\u00E4ntmaterialID"],1,2)))
 res <- cbind(res,year)
-
-
 
 
 save(res,file="I:/ESS/SVA3D/AMR/AMR_total.RData")

@@ -31,3 +31,5 @@ eliminate.swedish.the.wrong.way <- function(x){
   x<- str_replace(x,"å","a")
   return(x)
 }
+
+

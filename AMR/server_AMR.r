@@ -5,7 +5,7 @@ load(paste0(sourcefiles,"/SVA3d/AMR/AMR_total.RData"))
 res1 <- reactive({
   load(paste0(sourcefiles,"/SVA3d/AMR/AMR_total.RData"))
   
-  res <- fix.encoding(res)
+  #res <- fix.encoding(res)
   columns.res <- eliminate.swedish.the.wrong.way(colnames(res))
   colnames(res) <- columns.res
   
