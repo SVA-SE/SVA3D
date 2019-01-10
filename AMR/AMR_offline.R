@@ -1,9 +1,9 @@
 library(tidyr)
 library(dplyr)
 
+
+sink("I:/ESS/SVA3D/AMR/AMR_offline_log.R")
 source("I:/ESS/SVA3D/AMR/AMR_functions.R")
-
-
 
 #resANT <- read.table("T:\\resistensrapporter\\Resistensbestämningar_ANT_allt_fcd.txt", header=TRUE, sep="\t", dec=",", encoding="latin1", quote = "\"",comment.char = "",fill=TRUE ) 
 
@@ -118,3 +118,4 @@ res <- cbind(res,year)
 save(res,file="I:/ESS/SVA3D/AMR/AMR_total.RData")
 
 
+sink()
