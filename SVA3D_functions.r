@@ -54,12 +54,12 @@ get_plot_output_list <- function(max_plots, barplot.data, weeks, weeks.to.plot) 
 
 
 eliminate.swedish.the.wrong.way <- function(x){
-  x<- str_replace(x,"Ö","O")
-  x<- str_replace(x,"Ä","A")
-  x<- str_replace(x,"Å","A")
-  x<- str_replace(x,"ö","o")
-  x<- str_replace(x,"ä","a")
-  x<- str_replace(x,"å","a")
+  x<- str_replace(x,"\u00D6","O")
+  x<- str_replace(x,"\u00C4","A")
+  x<- str_replace(x,"\u00C5","A")
+  x<- str_replace(x,"\u00F6","o")
+  x<- str_replace(x,"\u00E4","a")
+  x<- str_replace(x,"\u00E5","a")
   return(x)
 }
 
