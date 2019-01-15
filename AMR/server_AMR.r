@@ -125,7 +125,7 @@ res3 <- reactive({
 output$columns.table_AMR <- renderUI({
  # exclude.columns=c("ab.nummer","cefinas","esbl.a.pcr","esbl.m.pcr","kvot.caz.och.caz.c","kvot.ctx.och.ctx.c","maldi.tof","penicillinatest","staf.maldi","tmsz.fran.biomic")
 checkboxGroupInput(inputId="columns.table_AMR", label="Select columns to display",
-                   choices=colnames(res3()),
+                   choices=as.list(colnames(res3())),
                    selected=as.list(colnames(res3())[!(colnames(res3())%in%c("ab.nummer","cefinas","esbl.a.pcr","esbl.m.pcr","kvot.caz.och.caz.c","kvot.ctx.och.ctx.c","maldi.tof","penicillinatest","staf.maldi","tmsz.fran.biomic"))],
                    inline = TRUE))
 })
