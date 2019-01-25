@@ -1,5 +1,5 @@
 # load data ----
-#load(paste0(sourcefiles,"/SVA3D/AMR/AMR_total.RData"))
+load(paste0(sourcefiles,"/SVA3D/AMR/AMR_total.RData"))
 source(paste0(sourcefiles,"/SVA3D/SVA3D_functions.r"))
 source(paste0(sourcefiles,"/SVA3D/SVA3D_definitions.r"))
 
