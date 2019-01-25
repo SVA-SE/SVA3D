@@ -109,12 +109,12 @@ res3 <- reactive({
          (res3$Undersokning%in%input$test)
   ),]
   
-  res3 <- res3[, colSums(!is.na(res3))!=0]
-  
-  for (c in 1:dim(res3)[2]){
- # res3[,c]<- as.character(res3[,c])
-  if(is.character(res3[,c])==T)(res3[which(is.na(res3[,c])),c]<- "")
-  }
+  # res3 <- res3[, colSums(!is.na(res3))!=0]
+  # 
+  # for (c in 1:dim(res3)[2]){
+  # res3[,c]<- as.character(res3[,c])
+  # res3[which(is.na(res3[,c])),c]<- ""
+  # }
   
   return(res3)
 })
@@ -126,10 +126,10 @@ output$columns.table_AMR <- renderUI({
  # exclude.columns=c("ab.nummer","cefinas","esbl.a.pcr","esbl.m.pcr","kvot.caz.och.caz.c","kvot.ctx.och.ctx.c","maldi.tof","penicillinatest","staf.maldi","tmsz.fran.biomic")
 checkboxGroupInput(inputId="columns.table_AMR", label="Select columns to display",
                    choices=as.list(colnames(res3())),
-                   selected=as.list(colnames(res3())[!(colnames(res3())%in%c("ab-nummer",
-                                          "cefinas","esbl-a-pcr","esbl-m-pcr","kvot caz och caz-c",
-                                          "kvot ctx och ctx-c","maldi-tof","penicillinastest","staf maldi","ab maldi","allm maldi",
-                                          "tmsz fran biomic"))]),
+                   #selected=as.list(colnames(res3())[!(colnames(res3())%in%c("ab-nummer",
+                   #                       "cefinas","esbl-a-pcr","esbl-m-pcr","kvot caz och caz-c",
+                   #                       "kvot ctx och ctx-c","maldi-tof","penicillinastest","staf maldi","ab maldi","allm maldi",
+                   #                       "tmsz fran biomic"))]),
                    inline = TRUE)
 })
 
