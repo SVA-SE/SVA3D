@@ -12,14 +12,14 @@ resANT <- read.csv2("T:\\SVA3D\\AMR\\Resistensbest\u00E4mningar ANT allt_fcd.txt
                     header = TRUE,
                     na.strings = "",
                     stringsAsFactors = FALSE,
-                    encoding = "latin-1",
+                    encoding = "UTF-8",
                     quote = "")
 resBKT <- read.csv2("T:\\SVA3D\\AMR\\Resistensbest\u00E4mningar BKT allt_fcd.txt",
                     sep = "\t",
                     header = TRUE,
                     na.strings = "",
                     stringsAsFactors = FALSE,
-                    encoding = "latin-1",
+                    encoding = "UTF-8",
                     quote = "")
 
 
