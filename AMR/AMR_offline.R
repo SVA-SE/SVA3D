@@ -2,7 +2,7 @@ library(tidyr)
 library(dplyr)
 
 
-sink("I:/ESS/SVA3D/AMR/AMR_offline_log.txt")
+#sink("I:/ESS/SVA3D/AMR/AMR_offline_log.txt")
 source("I:/ESS/SVA3D/AMR/AMR_functions.R")
 
 #resANT <- read.table("T:\\resistensrapporter\\Resistensbestämningar_ANT_allt_fcd.txt", header=TRUE, sep="\t", dec=",", encoding="latin1", quote = "\"",comment.char = "",fill=TRUE ) 
@@ -12,14 +12,14 @@ resANT <- read.csv2("T:\\SVA3D\\AMR\\Resistensbest\u00E4mningar ANT allt_fcd.txt
                     header = TRUE,
                     na.strings = "",
                     stringsAsFactors = FALSE,
-                    encoding = "UTF-8",
+                    encoding = "latin-1",
                     quote = "")
 resBKT <- read.csv2("T:\\SVA3D\\AMR\\Resistensbest\u00E4mningar BKT allt_fcd.txt",
                     sep = "\t",
                     header = TRUE,
                     na.strings = "",
                     stringsAsFactors = FALSE,
-                    encoding = "UTF-8",
+                    encoding = "latin-1",
                     quote = "")
 
 
@@ -116,4 +116,4 @@ res <- cbind(res,year)
 save(res,file="I:/ESS/SVA3D/AMR/AMR_total.RData")
 
 
-sink()
+#sink()
