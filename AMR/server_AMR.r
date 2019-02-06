@@ -104,12 +104,12 @@ res3 <- reactive({
   
   res3 <- res2()
   
-  res3 <- res3[(
+  res3 <- res3[
        
          (res3$Material%in%input$material)&
          (res3$Bakterienamn%in%input$bacteria)&
          (res3$Undersokning%in%input$test)
-  ),]
+  ,]
   
   #res3 <- res3[, colSums(!is.na(res3))!=0]
 
