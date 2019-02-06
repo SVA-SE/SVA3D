@@ -111,12 +111,12 @@ res3 <- reactive({
          (res3$Undersokning%in%input$test)
   ),]
   
-  res3 <- res3[, colSums(!is.na(res3))!=0]
+  #res3 <- res3[, colSums(!is.na(res3))!=0]
 
-  # for (c in 1:dim(res3)[2]){
-  # res3[,c]<- as.character(res3[,c])
-  # res3[which(is.na(res3[,c])),c]<- ""
-  # }
+   for (c in 1:dim(res3)[2]){
+   res3[,c]<- as.character(res3[,c])
+   res3[which(is.na(res3[,c])),c]<- ""
+   }
   
   return(res3)
 })
