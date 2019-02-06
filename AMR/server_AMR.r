@@ -141,7 +141,7 @@ output$table_AMR <- DT::renderDataTable(DT::datatable(rownames= FALSE,{
   
   data <- res3()
 
-  data[,input$columns.table_AMR, drop = FALSE]
+  #data[,input$columns.table_AMR, drop = FALSE]
 })
 %>%
   DT::formatStyle(columns = input$columns.table_AMR, fontSize = '80%')
