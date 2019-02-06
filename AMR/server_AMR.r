@@ -3,6 +3,9 @@ load(paste0(sourcefiles,"/SVA3D/AMR/AMR_total.RData"))
 source(paste0(sourcefiles,"/SVA3D/SVA3D_functions.r"))
 source(paste0(sourcefiles,"/SVA3D/SVA3D_definitions.r"))
 
+columns.res <- eliminate.swedish.the.wrong.way(colnames(res))
+colnames(res) <- columns.res
+
 # res1 ----
 res1 <- reactive({
   load(paste0(sourcefiles,"/SVA3D/AMR/AMR_total.RData"))
@@ -111,12 +114,12 @@ res3 <- reactive({
          (res3$Undersokning%in%input$test)
   ,]
   
-  #res3 <- res3[, colSums(!is.na(res3))!=0]
+  res3 <- res3[, colSums(!is.na(res3))!=0]
 
-   # for (c in 1:dim(res3)[2]){
-   # res3[,c]<- as.character(res3[,c])
-   # res3[which(is.na(res3[,c])),c]<- ""
-   #}
+   for (c in 1:dim(res3)[2]){
+   res3[,c]<- as.character(res3[,c])
+   res3[which(is.na(res3[,c])),c]<- ""
+  }
   
   return(res3)
 })
@@ -141,7 +144,7 @@ output$table_AMR <- DT::renderDataTable(DT::datatable(rownames= FALSE,{
   
   data <- res3()
 
-  #data[,input$columns.table_AMR, drop = FALSE]
+  data[,input$columns.table_AMR, drop = FALSE]
 })
 %>%
   DT::formatStyle(columns = input$columns.table_AMR, fontSize = '80%')
