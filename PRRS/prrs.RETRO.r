@@ -180,7 +180,7 @@ interesting.events <- prrs.sva.interesting %>%
   summarise(date = Ankomstdatum[1])
 
 date.range <-
-  as.data.frame(seq.Date(as.Date("2012-01-01"), as.Date("2018-12-31"), by = "day"))
+  as.data.frame(seq.Date(as.Date("2009-01-01"), as.Date("2018-12-31"), by = "day"))
 colnames(date.range) <- "date"
 
 interesting.timeseries <- interesting.events %>%
