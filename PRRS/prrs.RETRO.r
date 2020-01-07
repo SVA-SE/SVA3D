@@ -6,11 +6,9 @@ library(data.table)
 library(ggplot2)
 
 data_path <-
-  "I:/ESS/SVA3D/PRRS/retro data/" # path to raw input data
-table_path <-
-  "I:/ESS/SVA3D/PRRS/tables/" # path to classification tables and other help data
-out_path <-
-  "C:/Users/wiktor.gustafsson/SVA/PigPeaks - Documents/sysModel/data/" # path to output location for timeseries tables
+  "I:/ESS/SVA3D/PRRS/data/" # path to data
+csv_path <-
+  "C:/Users/wiktor.gustafsson/SVA/PigPeaks - Documents/sysModel/data/" # path to output location for timeseries csv tables
 
 make_timeseries <- function(data, daterange) {
   ret <-
@@ -47,18 +45,18 @@ make_timeseries <- function(data, daterange) {
 
 #### SVA DATA ####
 
-html_pattern <- "<[^>]*>(.+)<[^>]*>"
+html.pattern <- "<[^>]*>(.+)<[^>]*>"
 
 sva.retro <-
   fread(
-    paste0(data_path, "sva.retro.2014-2018.txt"),
+    paste0(data_path, "retro/sva.retro.2014-2018.txt"),
     header = TRUE,
     na.strings = "",
     stringsAsFactors = FALSE,
     encoding = "UTF-8",
     quote = "\"",
     data.table = TRUE
-  )[str_detect(Uppdrag, html_pattern), Uppdrag := str_replace(Uppdrag, html_pattern, "\\1")] %>%
+  )[str_detect(Uppdrag, html.pattern), Uppdrag := str_replace(Uppdrag, html.pattern, "\\1")] %>%
   .[, Ankomstdatum := as.Date(Ankomstdatum, "%m/%d/%y")] %>%
   .[is.na(Ankomstdatum), Ankomstdatum := as.Date(str_match(Uppdrag, "^U(\\d{6})")[, 2], format = "%y%m%d")] %>%
   setnames(old = "Ankomstdatum", new = "date")
@@ -66,7 +64,7 @@ sva.retro <-
 # import list of possible agens and their relevance to PRRS
 sva.agens <-
   fread(
-    paste0(table_path, "prrs.sva.agens.csv"),
+    paste0(data_path, "tables/prrs.sva.agens.csv"),
     encoding = "UTF-8",
     colClasses = "character",
     na.strings = ""
@@ -81,7 +79,7 @@ sva.agens.relevant <- sva.agens %>%
 # repeat for unders?kningar
 sva.undersokning <-
   unique(fread(
-    paste0(table_path, "prrs.sva.undersokning.csv"),
+    paste0(data_path, "tables/prrs.sva.undersokning.csv"),
     encoding = "UTF-8",
     colClasses = "character",
     na.strings = ""
@@ -118,7 +116,7 @@ sva.with.agens.undersokning[is.na(PRRSundersokning)]$PRRSundersokning <-
 # load table with classification of provtagningsorsaker
 sva.provtagningsorsak <-
   fread(
-    paste0(table_path, "prrs.sva.provtagningsorsak.csv"),
+    paste0(data_path, "tables/prrs.sva.provtagningsorsak.csv"),
     encoding = "UTF-8",
     colClasses = "character",
     na.strings = "",
@@ -140,13 +138,14 @@ sva.agens.undersokning.origin[is.na(ori)]$ori <- "Unclassified"
 sva.interesting <-
   sva.agens.undersokning.origin[(PRRSagens > 0 |
                                    PRRSundersokning > 0) &
-                                  (ori == "Passive/unknown" | is.na(`Överordnade uppdrag`))]
+                                  (ori == "Passive/unknown" |
+                                     is.na(`Överordnade uppdrag`))]
 
 #### SJV DATA ####
 
 # read the data
 sjv.retro <- fread(
-  paste0(data_path, "sjv.retro.3800-days.txt"),
+  paste0(data_path, "retro/sjv.retro.3800-days.txt"),
   encoding = "UTF-8",
   na.strings = "",
   stringsAsFactors = FALSE
@@ -159,7 +158,7 @@ sjv.retro <- sjv.retro[date <= as.Date("2018-08-08")]
 
 # import diagnosis codes and their classifications
 sjv.diagnos <- fread(
-  paste0(table_path, "prrs.sjv.diagnos.csv"),
+  paste0(data_path, "tables/prrs.sjv.diagnos.csv"),
   encoding = "UTF-8",
   na.strings = "",
   stringsAsFactors = FALSE
@@ -168,7 +167,7 @@ sjv.diagnos <- fread(
 # import handelsvara codes and their relevance to reproductive and/or respiratory diagnoses
 sjv.handelsvara <-
   fread(
-    paste0(table_path, "prrs.sjv.handelsvara.csv"),
+    paste0(data_path, "tables/prrs.sjv.handelsvara.csv"),
     encoding = "UTF-8",
     na.strings = "",
     stringsAsFactors = FALSE
@@ -216,7 +215,7 @@ sjv.with.diagnos <- merge(sjv.retro,
                           all.x = TRUE)
 
 sjv.with.diagnos.handelsvara <- merge(sjv.with.diagnos,
-                                      sjv.handelsvara[,-"Handelsvara.Beskrivning"],
+                                      sjv.handelsvara[, -"Handelsvara.Beskrivning"],
                                       by = "Handelsvarakod",
                                       all.x = TRUE)
 sjv.with.diagnos.handelsvara[is.na(Handelsvara.respiratory), Handelsvara.respiratory := 0]
@@ -235,11 +234,9 @@ sjv.any.code <- sjv.with.diagnos.handelsvara[!is.na(Diagnos.class)]
 #### TIMESERIES ####
 
 sva.all.dates <-
-  data.table(date = seq.Date(
-    floor_date(min(sva.retro$date), "month"),
-    ceiling_date(max(sva.retro$date), "month") - 1,
-    by = "day"
-  ))
+  data.table(date = seq.Date(floor_date(min(sva.retro$date), "month"),
+                             ceiling_date(max(sva.retro$date), "month") - 1,
+                             by = "day"))
 
 sjv.all.dates <-
   data.table(date = seq.Date(floor_date(min(sjv.retro$date), "month"), ceiling_date(max(sjv.retro$date), "month") - 1, by = "day"))
@@ -312,73 +309,105 @@ max(
 ),
 by = "day"))
 
-sva.absweeks <-
-  rep(
-    1:(nrow(sva.timeseries) %/% 7 + 1) + (as.numeric(
-      min(sva.all.dates$date) - min(sjv.all.dates$date)
-    ) %/% 7),
-    each = 7,
-    length.out = nrow(sva.timeseries)
-  )
+retro.sva <- merge(sva.timeseries,
+                   absweeks,
+                   by = "date",
+                   all.x = TRUE) %>%
+  .[, start_date := floor_date(date, "week", week_start = 1)] %>%
+  .[, .(N = sum(N)),
+    by = c("start_date",
+           "absweek")] %>%
+  .[, .(start_date,
+        year = year(start_date),
+        week = isoweek(start_date),
+        absweek,
+        N)]
 
-sva.output <- merge(sva.timeseries,
-                    absweeks,
-                    by = "date",
-                    all.x = TRUE)
-sjv.respiratory.output <- merge(sjv.respiratory.series,
+retro.sjv.respiratory <- merge(sjv.respiratory.series,
+                               absweeks,
+                               by = "date",
+                               all.x = TRUE) %>%
+  .[, start_date := floor_date(date, "week", week_start = 1)] %>%
+  .[, .(N = sum(N)),
+    by = c("start_date",
+           "absweek")] %>%
+  .[, .(start_date,
+        year = year(start_date),
+        week = isoweek(start_date),
+        absweek,
+        N)]
+retro.sjv.reproductive <- merge(sjv.reproductive.series,
                                 absweeks,
                                 by = "date",
-                                all.x = TRUE)
-sjv.reproductive.output <- merge(sjv.reproductive.series,
-                                 absweeks,
-                                 by = "date",
-                                 all.x = TRUE)
-sjv.prop.output <- merge(sjv.prop.series,
-                         absweeks,
-                         by = "date",
-                         all.x = TRUE) %>%
-  .[, c("N_prop", "N_tot") := list(sum(N) / sum(N_tot), sum(N_tot)), by = absweek] %>%
-  .[, .(date, week, absweek, N_prop, N_tot)] %>%
-  .[is.nan(N_prop), N_prop := 0]
+                                all.x = TRUE) %>%
+  .[, start_date := floor_date(date, "week", week_start = 1)] %>%
+  .[, .(N = sum(N)),
+    by = c("start_date",
+           "absweek")] %>%
+  .[, .(start_date,
+        year = year(start_date),
+        week = isoweek(start_date),
+        absweek,
+        N)]
+retro.sjv.proportion <- merge(sjv.prop.series,
+                              absweeks,
+                              by = "date",
+                              all.x = TRUE) %>%
+  .[, start_date := floor_date(date, "week", week_start = 1)] %>%
+  .[, .(N_prop = sum(N) / sum(N_tot),
+        N_tot = sum(N_tot)),
+    by = c("start_date",
+           "absweek")] %>%
+  .[, .(
+    start_date,
+    year = year(start_date),
+    week = isoweek(start_date),
+    absweek,
+    N_prop,
+    N_tot
+  )]
 
-fwrite(
-  sva.output[,-c("year",
-                 "yearweek",
-                 "yearmonth")],
-  file = paste0(out_path,
-                "prrs.retro.sva.csv"),
-  sep = ",",
-  eol = "\r\n",
-  na = ""
+save(
+  retro.sva,
+  retro.sjv.proportion,
+  retro.sjv.respiratory,
+  retro.sjv.reproductive,
+  file = paste0(data_path,
+                "prrs.retro.timeseries.RData")
 )
 
-fwrite(
-  sjv.respiratory.output[,-c("year",
-                             "yearweek",
-                             "yearmonth")],
-  file = paste0(out_path,
-                "prrs.retro.sjv.respiratory.csv"),
-  sep = ",",
-  eol = "\r\n",
-  na = ""
-)
-
-fwrite(
-  sjv.reproductive.output[,-c("year",
-                              "yearweek",
-                              "yearmonth")],
-  file = paste0(out_path,
-                "prrs.retro.sjv.reproductive.csv"),
-  sep = ",",
-  eol = "\r\n",
-  na = ""
-)
-
-fwrite(
-  sjv.prop.output,
-  file = paste0(out_path,
-                "prrs.retro.sjv.proportion.csv"),
-  sep = ",",
-  eol = "\r\n",
-  na = ""
-)
+# fwrite(
+#   sva.output,
+#   file = paste0(csv_path,
+#                 "prrs.retro.sva.csv"),
+#   sep = ",",
+#   eol = "\r\n",
+#   na = ""
+# )
+#
+# fwrite(
+#   sjv.respiratory.output,
+#   file = paste0(csv_path,
+#                 "prrs.retro.sjv.respiratory.csv"),
+#   sep = ",",
+#   eol = "\r\n",
+#   na = ""
+# )
+#
+# fwrite(
+#   sjv.reproductive.output,
+#   file = paste0(csv_path,
+#                 "prrs.retro.sjv.reproductive.csv"),
+#   sep = ",",
+#   eol = "\r\n",
+#   na = ""
+# )
+#
+# fwrite(
+#   sjv.prop.output,
+#   file = paste0(csv_path,
+#                 "prrs.retro.sjv.proportion.csv"),
+#   sep = ",",
+#   eol = "\r\n",
+#   na = ""
+# )
